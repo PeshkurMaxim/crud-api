@@ -6,12 +6,24 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
 
     let result: Promise<IResponse> = new Promise((resolve, reject) => {});
 
-    switch (req.url) {
+    let routeUrl = '';
+
+    if (typeof req.url == 'string')
+        routeUrl = routerRegex(req.url);
+            
+    
+
+    switch (routeUrl) {
         case '/api/users': {
           if (req.method === 'GET') {
             result = ControllerUser.getList();
           }
           break;
+        }
+
+        case '/api/users/:id': {
+            console.log('test');
+            
         }
 
         default: {
@@ -36,4 +48,18 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
             res.end("Internal Server Error");
         })
 
+}
+
+function routerRegex (str: string): string {
+
+    const apiPath = str.replace(RegExp('^\/api\/users'), '');
+
+    if (apiPath == '' || apiPath == str)
+        return str;
+            
+    if ((apiPath.match(/\//g) || []).length > 1)
+        return str;
+    else 
+        return "/api/users/:id"
+    
 }
