@@ -5,8 +5,8 @@ export interface IUser {
     hobbies: string[] | void[]
 }
 
-export interface IUserResponse {
+export interface IResponse {
     statusCode: number
     contentType: string
-    data: IUser[] | void[]
+    data: string
 }

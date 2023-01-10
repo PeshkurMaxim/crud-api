@@ -1,10 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { ControllerUser } from '../controllers/users';
-import { IUserResponse } from '../types/index'
+import { IResponse } from '../types/index'
 
 export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
 
-    let result: Promise<IUserResponse> = new Promise((resolve, reject) => {});
+    let result: Promise<IResponse> = new Promise((resolve, reject) => {});
 
     switch (req.url) {
         case '/api/users': {
@@ -15,7 +15,13 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
         }
 
         default: {
-            result = new Promise((resolve, reject) => {throw new Error("Page not found")});
+            result = new Promise((resolve, reject) => {
+                resolve({
+                    statusCode: 404,
+                    contentType: 'text/plain; charset=UTF-8',
+                    data: "Page not found"
+                })
+            });
         }
     }
 
@@ -23,11 +29,11 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
         .then( response => {
             res.statusCode = response.statusCode;
             res.setHeader("Content-Type", response.contentType);
-            res.end(JSON.stringify(response.data));
+            res.end(response.data);
         })
         .catch( (err: Error) => {
-            res.statusCode = 404;
-            res.end(err.message);
+            res.statusCode = 500;
+            res.end("Internal Server Error");
         })
 
 }

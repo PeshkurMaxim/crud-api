@@ -1,14 +1,15 @@
-import { IUserResponse } from '../types/index'
+import { IResponse } from '../types/index'
 import ModelUsers from '../models/users'
+import { json } from 'stream/consumers'
 
 export class ControllerUser {
 
-    static getList(): Promise<IUserResponse> {
+    static getList(): Promise<IResponse> {
         return new Promise((resolve, rejects) => {
             resolve({
                 statusCode: 200,
                 contentType: 'application/json',
-                data: ModelUsers.getList()
+                data: JSON.stringify(ModelUsers.getList())
             })
         })
     }
