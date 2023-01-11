@@ -31,7 +31,21 @@ class ModelUser {
         return this.dbUsers.filter((user: IUser) => {
             return user.id === id;
         })[0];
-        
+
+    }
+
+    public create(user: IUser):IUser {
+
+        const newid = uuidv4();
+
+        this.dbUsers.push({
+            id: newid,
+            username: user.username,
+            age: user.age,
+            hobbies: user.hobbies
+        });
+
+        return this.getById(newid);
     }
 
 }

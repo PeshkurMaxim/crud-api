@@ -1,5 +1,5 @@
 export interface IUser {
-    id: string // uuid
+    id?: string // uuid
     username: string
     age: number
     hobbies: string[] | void[]

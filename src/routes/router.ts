@@ -20,6 +20,10 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
                 result = ControllerUser.getList();
             }
 
+            if (req.method === 'POST') {
+                result = ControllerUser.create(req);
+            }
+
             
 
             break;
