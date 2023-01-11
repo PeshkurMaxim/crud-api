@@ -76,11 +76,7 @@ class ControllerUser {
 
                     const user = <IUser>JSON.parse(data);
 
-                    if (
-                        user.hasOwnProperty("username") && typeof user.username == 'string' 
-                        && user.hasOwnProperty("age") && typeof user.age == 'number'
-                        && user.hasOwnProperty("hobbies") && this.validateHobbies(user.hobbies)
-                    ) {
+                    if (this.validateUser(user)) {
     
                         resolve({
                             statusCode: 201,
@@ -101,10 +97,85 @@ class ControllerUser {
                 } catch (err) {
                     reject(err)
                 }
-                
+
             });
 
             request.on('error', (err) => reject(new Error(err.message)));
+        })
+    }
+
+
+    public update(id: string, request: IncomingMessage): Promise<IResponse> {
+        
+        return new Promise((resolve, reject) => {
+
+            if (this.uuidValidateV4(id)) {
+
+                let data = "";
+            
+                request.on("data", chunk => {
+                    try {
+                        data += chunk;
+                    } catch (error) {
+                        reject(error)
+                    }
+                });
+
+                request.on("end", () => {
+
+                    try {
+    
+                        const user = <IUser>JSON.parse(data);
+    
+                        if (this.validateUser(user)) {
+
+                            const result = ModelUsers.update(user);
+
+                            if (result) {
+
+                                resolve({
+                                    statusCode: 200,
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(result)
+                                });
+
+                            } else {
+
+                                resolve({
+                                    statusCode: 400,
+                                    contentType: 'text/plain; charset=UTF-8',
+                                    data: "Page not found"
+                                });
+
+                            }
+        
+                        } else {
+        
+                            resolve({
+                                statusCode: 400,
+                                contentType: 'text/plain; charset=UTF-8',
+                                data: "Invalid data"
+                            });
+        
+                        }
+                        
+                    } catch (err) {
+                        reject(err)
+                    }
+    
+                });
+
+                request.on('error', (err) => reject(new Error(err.message)));
+
+            } else {
+
+                resolve({
+                    statusCode: 400,
+                    contentType: 'text/plain; charset=UTF-8',
+                    data: "Invalid id"
+                });
+
+            }
         })
     }
 
@@ -117,6 +188,14 @@ class ControllerUser {
         if (arr.length == 0) return true;
 
         return arr.every(i => typeof i === "string")
+    }
+
+    private validateUser(obj: IUser): boolean {
+        return (
+            obj.hasOwnProperty("username") && typeof obj.username == 'string' 
+            && obj.hasOwnProperty("age") && typeof obj.age == 'number'
+            && obj.hasOwnProperty("hobbies") && this.validateHobbies(obj.hobbies)
+        )
     }
 }
 

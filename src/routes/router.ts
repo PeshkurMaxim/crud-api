@@ -24,8 +24,6 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
                 result = ControllerUser.create(req);
             }
 
-            
-
             break;
         }
 
@@ -35,6 +33,12 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
                 const id = getArgFromUrl(String(req.url));
 
                 result = ControllerUser.getById(id);
+            }
+
+            if (req.method === 'PUT') {
+                const id = getArgFromUrl(String(req.url));
+
+                result = ControllerUser.update(id, req);
             }
             
             break;

@@ -48,6 +48,25 @@ class ModelUser {
         return this.getById(newid);
     }
 
+
+    public update(user: IUser):IUser | null {
+
+        this.dbUsers.forEach( (value, key) => {
+            if (value.id == user.id) {
+                this.dbUsers[key] = {
+                    id: value.id,
+                    username: user.username,
+                    age: user.age,
+                    hobbies: user.hobbies
+                };
+
+                return this.dbUsers[key];
+            }
+        })
+
+        return null;
+    }
+
 }
 
 
