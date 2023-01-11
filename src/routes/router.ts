@@ -60,6 +60,6 @@ function routerRegex (str: string): string {
     if ((apiPath.match(/\//g) || []).length > 1)
         return str;
     else 
-        return "/api/users/:id"
+        return "/api/users/:id";
     
 }

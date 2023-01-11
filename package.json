@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run build:live",
     "build": "tsc -p .",
-    "build:live": "nodemon --exec \"ts-node\" src/index.ts"
+    "build:live": "nodemon --exec \"ts-node\" src/index.ts",
+    "start:inspect": "nodemon --exec \"node --require ts-node/register --inspect src/index.ts\""
   },
   "repository": {
     "type": "git",
