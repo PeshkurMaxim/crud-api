@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { ControllerUser } from '../controllers/users';
+import ControllerUser from '../controllers/users';
 import { IResponse } from '../types/index'
 
 export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
@@ -15,15 +15,25 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
 
     switch (routeUrl) {
         case '/api/users': {
-          if (req.method === 'GET') {
-            result = ControllerUser.getList();
-          }
-          break;
+          
+            if (req.method === 'GET') {
+                result = ControllerUser.getList();
+            }
+
+            
+
+            break;
         }
 
         case '/api/users/:id': {
-            console.log('test');
             
+            if (req.method === 'GET') {
+                const id = getArgFromUrl(String(req.url));
+
+                result = ControllerUser.getById(id);
+            }
+            
+            break;
         }
 
         default: {
@@ -32,7 +42,7 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
                     statusCode: 404,
                     contentType: 'text/plain; charset=UTF-8',
                     data: "Page not found"
-                })
+                });
             });
         }
     }
@@ -61,5 +71,11 @@ function routerRegex (str: string): string {
         return str;
     else 
         return "/api/users/:id";
+    
+}
+
+function getArgFromUrl (str: string): string {
+
+    return String(str.split("/").pop());
     
 }

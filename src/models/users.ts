@@ -18,10 +18,20 @@ class ModelUser {
 
     constructor(){
         this.dbUsers = [];
+        this.dbUsers = testUsers;
+
     }
 
     public getList():IUser[] {
         return this.dbUsers;
+    }
+
+    public getById(id:string):IUser {
+
+        return this.dbUsers.filter((user: IUser) => {
+            return user.id === id;
+        })[0];
+        
     }
 
 }
