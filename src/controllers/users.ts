@@ -129,25 +129,22 @@ class ControllerUser {
     
                         if (this.validateUser(user)) {
 
-                            const result = ModelUsers.update(user);
-
-                            if (result) {
-
-                                resolve({
-                                    statusCode: 200,
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(result)
-                                });
-
-                            } else {
-
-                                resolve({
-                                    statusCode: 400,
-                                    contentType: 'text/plain; charset=UTF-8',
-                                    data: "Page not found"
-                                });
-
-                            }
+                            ModelUsers.update(id, user).then(
+                                result => {
+                                    resolve({
+                                        statusCode: 200,
+                                        contentType: 'application/json',
+                                        data: JSON.stringify(result)
+                                    });
+                                },
+                                reject => {
+                                    resolve({
+                                        statusCode: 404,
+                                        contentType: 'text/plain; charset=UTF-8',
+                                        data: "Page not found"
+                                    });
+                                }
+                            )
         
                         } else {
         
@@ -177,6 +174,43 @@ class ControllerUser {
 
             }
         })
+    }
+
+    public delete(id: string): Promise<IResponse> {
+
+        return new Promise((resolve, reject) => {
+
+            if (this.uuidValidateV4(id)) {
+            
+                ModelUsers.delete(id).then(
+                    result => {
+                        resolve({
+                            statusCode: 204,
+                            contentType: 'application/json',
+                            data: ''
+                        });
+                    },
+                    reject => {
+                        resolve({
+                            statusCode: 404,
+                            contentType: 'text/plain; charset=UTF-8',
+                            data: "Page not found"
+                        });
+                    }
+                )    
+
+            } else {
+
+                resolve({
+                    statusCode: 400,
+                    contentType: 'text/plain; charset=UTF-8',
+                    data: "Invalid id"
+                });
+
+            }
+
+        });
+
     }
 
 

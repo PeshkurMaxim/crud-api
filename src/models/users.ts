@@ -48,23 +48,47 @@ class ModelUser {
         return this.getById(newid);
     }
 
+    public update(id: string, user: IUser): Promise<IUser> {
 
-    public update(user: IUser):IUser | null {
+        return new Promise(async (resolve, reject) => {
 
-        this.dbUsers.forEach( (value, key) => {
-            if (value.id == user.id) {
-                this.dbUsers[key] = {
-                    id: value.id,
-                    username: user.username,
-                    age: user.age,
-                    hobbies: user.hobbies
-                };
+            for await (let [key, value] of this.dbUsers.entries()) {
 
-                return this.dbUsers[key];
+                if (value.id == id) {
+                    this.dbUsers[key] = {
+                        id: value.id,
+                        username: user.username,
+                        age: user.age,
+                        hobbies: user.hobbies
+                    };
+
+                    resolve(this.dbUsers[key]);
+                }
+
             }
-        })
 
-        return null;
+            reject();
+        });
+
+    }
+
+    public delete(id: string): Promise<IUser> {
+
+        return new Promise(async (resolve, reject) => {
+
+            for await (let [key, value] of this.dbUsers.entries()) {
+
+                if (value.id == id) {
+                    this.dbUsers.splice(key, 1);
+
+                    resolve(this.dbUsers[key]);
+                }
+                
+            }
+
+            reject();
+        });
+
     }
 
 }

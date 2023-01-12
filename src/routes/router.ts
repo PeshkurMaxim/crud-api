@@ -4,7 +4,13 @@ import { IResponse } from '../types/index'
 
 export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
 
-    let result: Promise<IResponse> = new Promise((resolve, reject) => {});
+    let result: Promise<IResponse> = new Promise((resolve, reject) => {
+        resolve({
+            statusCode: 404,
+            contentType: 'text/plain; charset=UTF-8',
+            data: "Page not found"
+        });
+    });
 
     let routeUrl = '';
 
@@ -14,6 +20,7 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
     
 
     switch (routeUrl) {
+
         case '/api/users': {
           
             if (req.method === 'GET') {
@@ -40,19 +47,16 @@ export function appRouter(req: IncomingMessage, res: ServerResponse) : void {
 
                 result = ControllerUser.update(id, req);
             }
+
+            if (req.method === 'DELETE') {
+                const id = getArgFromUrl(String(req.url));
+
+                result = ControllerUser.delete(id);
+            }
             
             break;
         }
 
-        default: {
-            result = new Promise((resolve, reject) => {
-                resolve({
-                    statusCode: 404,
-                    contentType: 'text/plain; charset=UTF-8',
-                    data: "Page not found"
-                });
-            });
-        }
     }
 
     result
