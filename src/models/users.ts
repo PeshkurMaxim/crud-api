@@ -1,15 +1,6 @@
 import { IUser } from '../types/index';
 import { v4 as uuidv4 } from 'uuid';
 
-let testUsers = [
-    {
-        id: uuidv4(),
-        username: 'test user',
-        age: 20,
-        hobbies: []
-    }
-]
-
 
 class ModelUser {
 
@@ -18,8 +9,6 @@ class ModelUser {
 
     constructor(){
         this.dbUsers = [];
-        this.dbUsers = testUsers;
-
     }
 
     public getList():IUser[] {
